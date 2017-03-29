@@ -1,0 +1,124 @@
+﻿
+@{
+    ViewBag.Title = "Register";
+}
+<link href="~/Content/ViewsCSS/RegisterVIewCSS.css" rel="stylesheet" />
+<style>
+    .formDiv input {
+    display: inline !important;
+    width: 90%;
+    border-right: none;
+}
+
+.mainSpan div {
+    margin-top: 20px;
+}
+
+.mainSpan {
+    display: block;
+    width: 320px;
+    height: 100%;
+    margin: 0 auto;
+}
+
+.iconStyle {
+    display: inline !important;
+    border-left: none;
+    width: 10%;
+    margin-top: 20px !important;
+}
+
+#submitButton {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 120px;
+}
+.logoImage{
+    width:100%;
+    height:100%;
+}
+
+</style>
+<div class="mainDiv">
+    <input id="controlerUrl" type="hidden" value="@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString()" />
+    <div class="logoDiv">
+        <img class="logoImage" src="~/Content/img/CookBook Logo V2 PNG.png" />
+    </div>
+    <div class="textDiv">
+        Lorem ipsum dolor sit amet, sit ei debitis qualisque scripserit, est ex admodum detraxit adolescens. Diam inani audire quo ei, aperiam viderer propriae no per.
+
+    </div>
+    <div class="formDiv">
+        <div class="mainSpan">
+            <div><input id="nameInput" type="text" class="form-control" placeholder="Name" /><i class="glyphicon glyphicon-user form-control iconStyle"></i></div>
+            <div><input id="surenameInput" type="text" class="form-control" placeholder="Surename" /><i class="glyphicon glyphicon-user form-control iconStyle"></i></div>
+        
+          <div> <input id="UsernameInput" type="text" class="form-control" placeholder="Username" /><i class="glyphicon glyphicon-user form-control iconStyle"></i></div>
+          <div> <input id="EmailInput" type="text" class="form-control" placeholder="Email" /><i class="glyphicon glyphicon-envelope form-control iconStyle"></i></div>
+          <div> <input id="passwordInput" type="password" class="form-control" placeholder="Password" /><i class="glyphicon glyphicon-exclamation-sign form-control iconStyle"></i></div>
+          <div> <input id="confirmPassword" type="password" class="form-control" placeholder="Confirm Password" /><i class="glyphicon glyphicon-exclamation-sign form-control iconStyle"></i></div>
+          <div> <input id="phoneInput" type="tel" class="form-control" placeholder="Phone Number" /><i class="glyphicon glyphicon-earphone form-control iconStyle"></i></div>
+          <div> <input id="stateInput" type="text" class="form-control" placeholder="State" /><i class="glyphicon glyphicon-globe form-control iconStyle"></i></div>
+          <div> <input id="cityInput" type="text" class="form-control" placeholder="City" /><i class="glyphicon glyphicon-tower form-control iconStyle"></i></div>
+          <div> <input id="streetInput" type="text" class="form-control" placeholder="Street" /><i class="glyphicon glyphicon-road form-control iconStyle"></i></div>
+            <button id="submitButton" class="btn btn-danger">Register</button><label id="actionResultLabel" style="margin-left:15px;"></label>
+        </div>
+    </div>
+</div>
+<script>
+    $("#submitButton").on('click', function () {
+
+
+        if ($("#passwordInput").val() != $("#confirmPassword").val())
+        {
+            $("#actionResultLabel").text("Password doesn`t match!");
+            $("#actionResultLabel").css("color", "red");
+            return;
+        }
+        if ($("#nameInput").val() == "" || $("#surenameInput").val() == "" || $("#UsernameInput").val() == "" || $("#EmailInput").val() == "" || $("#passwordInput").val() == "" ||
+            $("#confirmPassword").val() == "" || $("#phoneInput").val() == "" || $("#stateInput").val() == "" || $("#cityInput").val() == "" || $("#streetInput").val() == "")
+        {
+            $("#actionResultLabel").text("All fields are required!");
+            $("#actionResultLabel").css("color", "red");
+            return;
+        }
+
+        var userData = setUserData();
+
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/Home/RegisterUser',
+                data: JSON.stringify({ user: userData }),
+                contentType: 'application/json'
+            }).success(function (result, status, error) {
+                var message = $.parseJSON(result).message;
+                if (message == "Valid username")
+                {
+                    $("#actionResultLabel").text("Success!");
+                    $("#actionResultLabel").css("color", "green");
+                    location.href = "/Home/Index";
+                }
+                else {
+                    $("#actionResultLabel").text(message);
+                    $("#actionResultLabel").css("color", "green");
+                }
+              
+            });
+
+    });
+
+    function setUserData() {
+        var user = {};
+        user.Name = $("#nameInput").val();
+        user.Surname = $("#surenameInput").val();
+        user.Username = $("#UsernameInput").val();
+        user.Email = $("#EmailInput").val();
+        user.Phonenum = $("#phoneInput").val();
+        user.Password = $("#passwordInput").val();
+        user.State = $("#stateInput").val();
+        user.City = $("#cityInput").val();
+        user.Street = $("#streetInput").val();
+        return user;
+    }
+</script>

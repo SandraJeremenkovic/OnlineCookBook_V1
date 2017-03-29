@@ -1,0 +1,171 @@
+﻿@{
+    ViewBag.Title = "Add Recepie";
+}
+
+@{
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+<link href="~/Content/ViewsCSS/UploadRecipeCSS.css" rel="stylesheet" />
+<div class="bgDiv">
+    <div class="container">
+        <div class="titleDiv">Add a recipe:</div>
+        <input type="hidden" id="imageHidden" value="@ViewBag.image" />
+        <input type="hidden" id="usernameHidden" value="@ViewBag.User" />
+        <div class="imgDiv borders container">
+            <div class="leftSectionDiv">
+                <div class="imageContainer">
+                    @if (ViewBag.image == null)
+                    {
+                        <img id="image" src="~/Content/img/missing-image.png" />
+                    }
+                    else
+                    {
+                        <img id="image" src="~/Content/Images/@ViewBag.image" />
+                    }
+                </div>
+            </div>
+            <div class="rightSectionDiv">
+                @using (Html.BeginForm("UploadImgPartialView", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <h3>Upload Image</h3>
+                    <input type="file" name="file" value="Browse" class="btn btn-danger" />
+                    <br />
+                    <input type="submit" value="Upload" class="btn btn-danger" />
+                }
+                @if (ViewBag.UploadSuccess == true)
+                {
+                    <span class="successSpan">Upload Successfull!</span>
+                }
+                @if (ViewBag.UploadSuccess == false)
+                {
+                    <span class="successSpan">ViewBag.message</span>
+                }
+            </div>
+       
+        </div>
+        <div class="recipeNameDiv borders">
+            <input id="recipeNameInput" type="text" class="form-control" placeholder="Recipe Name" style="width:100% !important; max-width:none !important" />
+        </div>
+        <div class="infoDiv borders">
+            <span style="margin-left:5px; margin-right:10px">Choose category:</span>
+            <select id="categorySelect" data-placeholder="Choose category..." style="width:250px !important; " class="chosen-select ">
+              
+                <option value="breakfast">Breakfast</option>
+                <option value="lunch">Lunch</option>
+                <option value="dinner">Dinner</option>
+              
+
+            </select>
+            <span style="margin-left:35px; margin-right:10px">Prepare time:</span>
+            <select id="timeSelect" data-placeholder="Choose prepare time..." style="width:250px !important; " class="chosen-select ">
+               
+                <option value="">15</option>
+                <option value="">30</option>
+                <option value="">45</option>
+                <option value="">60</option>
+                <option value="">90</option>
+                <option value="">120</option>
+
+
+            </select>
+            <span style="margin-left:5px">Minutes</span>
+        </div>
+        <div class="addIngredientsDiv borders">
+            <span id="addingSpan">Add ingredients:</span>
+            <input type="number" id="numberInput" min="1" placeholder="Quantity" value="1"/>
+            <select id="ingredientSelect" data-placeholder="Choose ingredient..." style="width:350px !important; " class="chosen-select ">
+                <option value=""></option>
+                @foreach (var option in @ViewBag.ingredients)
+                {
+                    <option value="@option.Price">@option.Name</option>
+                }
+                
+            </select>
+            <button id="addIngredientBtn" class="btn btn-danger">Add ingredient</button>
+            <ul id="ingList">
+                
+            </ul>
+        </div>
+        <div class="shortDscDiv borders">
+            <span id="addingSpan">Add Short Description:</span>
+            <textarea id="textAreaShortDsc"></textarea>
+        </div>
+        <div class="longDscDiv borders">
+            <span id="addingSpan">Add Instructions:</span>
+            <textarea id="textAreaLongDsc"></textarea>
+        </div>
+        <div class="tagsDiv borders">
+            <span id="addingSpan">Add Tags:</span>
+           <input type="text" id="tagsInput" placeholder="Split multiple tags with column (,) etc: fast,chicken,chinese..." class="form-control" />
+        </div>
+        <div class="buttonsDiv borders" style="margin-bottom:25px;">
+            <button id="addRecipeBtn" class="btn btn-danger buttons">Add Recipe</button>
+            <button id="discardChangesBtn" class="btn btn-warning buttons">Discard Changes</button>
+            <span id="retMessageSpan" style="font-weight:bold; font-size:25px; color:green;"></span>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".chosen-select").chosen();
+    });
+    $("#addIngredientBtn").on('click', function () {
+
+        $("#ingList").append('<li data-value=' + $("#ingredientSelect").find(":selected").val() + ' >' + $("#numberInput").val() + " " + $("#ingredientSelect").find(":selected").text() +  '</li>');
+
+    });
+    $("#addRecipeBtn").on('click', function () {
+
+
+
+        var recipeData = setRecipeData();
+
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/Home/AddRecipe',
+                data: JSON.stringify({ recipe: recipeData, username: $("#usernameHidden").val()}),
+                contentType: 'application/json'
+            }).success(function (result, status, error) {
+                var message = $.parseJSON(result).message;
+                $("#retMessageSpan").text(message);
+                setTimeout(function () { location.href = "/Home/Index"; }, 1000);
+               
+
+            });
+    });
+    function setRecipeData() {
+        var recipe = {};
+        recipe.Name = $("#recipeNameInput").val();
+        recipe.Category = $("#categorySelect").find(":selected").val()
+        recipe.PrepareTime = $("#timeSelect").find(":selected").text()
+        recipe.LongDsc = $("#textAreaLongDsc").val();
+        recipe.ShortDsc = $("#textAreaShortDsc").val();
+        recipe.Status = "Unapproved";
+        recipe.Image = $("#imageHidden").val();
+        recipe.Tags = $("#tagsInput").val().split(',');
+        recipe.Ingredients = [];
+        
+        listItems = $("#ingList").find("li").each(function () {
+            var listItem = $(this);
+            var ingredient = {};
+            var splitted = listItem.text().split(' ');
+            ingredient.Name = splitted[1];
+            ingredient.Quantity = splitted[0];
+            ingredient.Price = listItem.attr('data-value');
+
+            recipe.Ingredients.push(ingredient);
+            
+        });
+
+        return recipe;
+    }
+    $("#discardChangesBtn").on('click', function () {
+
+        location.href = "/Home/AddRecepie";
+        
+    });
+    $(document).ready(function () {
+        $("#usernameLabel").text("@ViewBag.User");
+    });
+</script>

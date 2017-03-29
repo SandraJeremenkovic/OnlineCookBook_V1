@@ -1,0 +1,56 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@{
+    if(ViewBag.User==null)
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_UserLayout.cshtml";
+    }
+        
+
+}
+
+<div class="main-index-div">
+    <input id="controlerUrl" type="hidden" value="@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString()" />
+    <div class="row main-title container">
+        <span class="titleSpan">
+            You don't need a silver fork to eat good food. Just pull up a chair, take a taste, come and join us and share your cooking creativity.
+
+        </span>
+    </div>
+    <div style="margin: 0 auto;">
+        <div class="categories-div container">
+            <div class="full-category" >
+                <div id="breakfast" class="specific-category breakfast-img"><img src="~/Content/img/breakfast-circle-img.png" /></div>
+              
+            </div>
+            <div class="full-category" >
+                <div id="lunch" class="specific-category breakfast-img"><img src="~/Content/img/lunch-circle-img.png" /></div>
+             
+            </div>
+            <div class="full-category" >
+                <div id="dinner" class="specific-category breakfast-img"><img src="~/Content/img/dinner-circle-img.png" /></div>
+              
+            </div>
+          
+           
+               @*<select id="searchSelect">
+                   <option>#dinner</option>
+                   <option>#breakfast</option>
+                   <option>#lunch</option>
+               </select>*@
+               <div class="searchDiv"> <input id="searchInput" type="text" class="form-control" placeholder="Search by tags, etc: breakfast,chicken,fast..." onkeypress="return searchByTags(event)" /><i class="glyphicon glyphicon-search form-control iconStyle"></i></div>
+           
+           
+        </div>        
+    </div>
+</div>
+<script>
+    $("#usernameLabel").text("@ViewBag.User");
+
+</script>
+<script src="~/Scripts/Index.js"></script>

@@ -1,0 +1,250 @@
+﻿@model OnlineCookBook.Models.FullRecipeViewModel
+@{
+    ViewBag.Title = "Full Recepie";
+}
+@{
+    if (ViewBag.User == null)
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_UserLayout.cshtml";
+    }
+
+
+}
+<link href="~/Content/ViewsCSS/FullRecepiesVIewCSS.css" rel="stylesheet" />
+@Html.Hidden("Category", @Model.Recipe.Category);
+@Html.Hidden("RecipeId", @Model.Recipe.Id);
+<input type="hidden" id="usernameHidden" value="@ViewBag.User" />
+<div class="mainBgDiv">
+    
+    <div class="container">
+        <input id="controlerUrl" type="hidden" value="@HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString()" />
+        <div class="RecepieNameDiv">
+            @Model.Recipe.Name
+        </div>
+        <img class="imageImg" src='../Content/Images/@Model.Recipe.Image'>
+        <div class="ingredinesDiv">
+            <div class="titleDiv">Ingredients:</div>
+            @foreach (var i in Model.Recipe.Ingredients)
+            {
+                <div style="margin-left:55px">
+                    <i class="glyphicon glyphicon-arrow-right"></i>
+                    <span class="quatntitySpan">@i.Quantity</span>
+                    <span class="quatntitySpan">@i.Name</span>
+                </div>
+            }
+            <button class="btn btn-danger" id="buyIngredients" data-toggle="modal" data-target="#billModal">Buy Ingredients</button>
+        </div>
+        <div class="fullDescriptionDiv">
+            <div class="titleDiv">How to prepare:</div>
+            <div class="descDiv">@Model.Recipe.LongDsc</div>
+        </div>
+        <div class="comentsDiv">
+
+
+
+            <div class="leftSection">
+                @{
+                    int num = 0;
+                    foreach (var com in ViewBag.Comments)
+                    {
+                        num++;
+                    }
+                }
+                
+                <div class="titleDiv">Comments:(@num)</div>
+                @foreach(var com in ViewBag.Comments)
+                {
+                    <div class="comment">
+                        <div class="commentInfo">
+                            <span class="commentInfoNameSpan">@com.Username</span>
+                            <span class="commentInfoDateSpan">@com.Date</span>
+                        </div>
+                        <div class="commentValDiv">
+                            @com.Content
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="rightSection">
+                @*<div class="titleDiv">Leave a comment:</div>*@
+                <textarea id="commentContent" class="textInput" placeholder="Leave a comment"></textarea>
+                <button id="submitCommnent" class=" btn btn-danger">Submit</button>
+                <span id="messageSpan"></span>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal fade" id="billModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h2 style="text-align:center; color:red !important;" class="modal-title">Your Order:</h2>
+                </div>
+                <div class="modal-body">
+                    <div style="height:420px">
+                        @foreach (var i in Model.Recipe.Ingredients)
+                        {
+                            var price = i.Price * i.Quantity;
+                            <ul id="ingredientsUl" style="display:block;">
+                                <li class="liElement" style="float:left; width:300px" id="@price">@i.Quantity @i.Name</li>
+
+
+                            </ul>
+                            <span style="float:right; font-size:25px" class="priceSpan">@price $</span>
+                        }
+                    </div>
+                    
+                    @{
+                        float cena=0;
+                        foreach (var i in Model.Recipe.Ingredients)
+                        {
+                            cena += i.Price * i.Quantity;
+                        } 
+                        <div style="font-size:55px;  border-top:1px solid black; font-weight:bold;">Total:  @cena $</div>
+                        <input type="hidden" id="fullPriceHidden" value="@cena" />
+                    }
+                    
+                    <div>
+                        <h2 style="text-align:center; display:block; margin-top:5px; margin-bottom:35px; padding-top:15px; color:red !important;  border-top:1px solid black;" class="modal-title">Adress To Deliver:</h2>
+                    </div>
+                    @if (Model.User == null)
+                    {
+                        <span id="adressMessageSpan">Please login to complete your purchase!</span>
+                    }
+                    else
+                    {
+                         <span id="adressSpan">@Model.User.State, @Model.User.City, @Model.User.Street, @Model.User.Phonenum</span>
+                    }
+                   
+                </div>
+                <div class="modal-footer">
+                    <span id="modalMessageSpan"></span>
+                    <button style="width:170px;" id="confirmBtn" type="button" class="btn btn-success">Confirm</button>
+                    <button style="width:170px;" type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    $("#usernameLabel").text("@ViewBag.User");
+    $(document).ready(function () {
+        var cat = $("#Category").val();
+        if (cat == "breakfast")
+        {
+            $(".mainBgDiv").css("background-image", "url('../Content/img/breakfast.jpeg')");
+        }
+        else if(cat == "lunch")
+        {
+            $(".mainBgDiv").css("background-image", "url('../Content/img/lunch.jpg')");
+        }
+        else {
+            $(".mainBgDiv").css("background-image", "url('../Content/img/dinner-big.jpg')");
+        }
+        
+    });
+    
+ 
+    $("#submitCommnent").on('click', function () {
+
+
+        if ($("#usernameHidden").val() == "")
+        {
+            $("#messageSpan").text("You need to login in order to leave a comment");
+            $("#messageSpan").css("color","red");
+            return;
+        }
+        var commentData = setCommentData();
+
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/Home/AddComment',
+                data: JSON.stringify({ comment: commentData, recipeId: $("#RecipeId").val() }),
+                contentType: 'application/json'
+            }).success(function (result, status, error) {
+                var message = $.parseJSON(result).message;
+                location.reload();
+               
+
+            });
+    });
+    function setCommentData() {
+        var comment = {};
+        comment.Content = $("#commentContent").val();
+        comment.Username = $("#usernameHidden").val();
+    
+
+        
+   
+        return comment;
+    }
+
+    $("#confirmBtn").on('click', function () {
+
+
+        if ($("#usernameHidden").val() == "") {
+            $("#modalMessageSpan").text("You need to login in order to complete purchase");
+            $("#modalMessageSpan").css("color", "red");
+            return;
+        }
+        var orderData = setOrderData();
+
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/Home/AddOrder',
+                data: JSON.stringify({ order: orderData, username: $("#usernameHidden").val() }),
+                contentType: 'application/json'
+            }).success(function (result, status, error) {
+                var message = $.parseJSON(result).message;
+
+                $("#modalMessageSpan").text(message);
+                $("#modalMessageSpan").css("color", "green");
+
+
+            });
+    });
+    function setOrderData() {
+        var order = {};
+        order.Fprice = $("#fullPriceHidden").val();
+        order.Status = "pending";
+        order.UserInfo = $("#adressSpan").text();
+        order.Ingredients = [];
+
+        //listItems = $("#ingredientsUl").find("li").each(function () {
+        //    var listItem = $(this);
+        //    var ingredient = {};
+        //    var splitted = listItem.text().split(' ');
+        //    ingredient.Name = splitted[1];
+        //    ingredient.Quantity = splitted[0];
+        //    ingredient.Price = listItem.attr('data-value');
+        //    order.Ingredients.push(ingredient);
+
+           
+
+        //});
+        var elements = document.getElementsByClassName('liElement');
+        for (var i = 0; i < elements.length; ++i) {
+            var listItem = elements[i];
+            var ingredient = {};
+            var splitted = listItem.textContent.split(' ');
+            ingredient.Name = splitted[1];
+            ingredient.Quantity = splitted[0];
+            ingredient.Price = listItem.id;
+            order.Ingredients.push(ingredient);
+        }
+
+
+
+        return order;
+    }
+</script>

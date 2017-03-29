@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewBag.Title = "Add Recepie";
+}
+
+
+<link href="~/Content/ViewsCSS/AddRecepieCSS.css" rel="stylesheet" />
+<div class="mainDiv">
+    <div class="container">
+        <div class="addImage">
+            @{Html.RenderAction("UploadImgPartialView", "Home");}
+           
+        </div>
+   
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#usernameLabel").text("@ViewBag.User");
+    });
+
+</script>

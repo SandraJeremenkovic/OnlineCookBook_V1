@@ -1,0 +1,147 @@
+﻿body {
+
+}
+
+.RecepieNameDiv {
+    margin-top: 55px;
+    border-top: 3px solid red;
+    border-bottom: 3px solid red;
+    font-size: 45px;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: bold;
+    padding: 5px;
+    background-color: rgb(255, 179, 179);
+}
+
+.imageImg {
+    margin-top: 15px;
+    border-top: 3px solid red;
+    border-bottom: 3px solid red;
+    width: 100%;
+    height: 350px;
+}
+
+.ingredinesDiv {
+    margin-top: 15px;
+    border-top: 3px solid red;
+    border-bottom: 3px solid red;
+    background-color: white;
+    padding-bottom: 40px;
+    padding-top: 40px;
+}
+
+.quatntitySpan {
+    font-size: 35px;
+    font-weight: bold;
+    margin-right: 15px;
+    margin-left: 5px;
+}
+
+.fullDescriptionDiv {
+    margin-top: 15px;
+    border-top: 3px solid red;
+    border-bottom: 3px solid red;
+    background-color: white;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    padding-right: 10px;
+}
+
+.titleDiv {
+    font-size: 45px;
+    margin-left: 25px;
+    padding: 10px;
+}
+
+.descDiv {
+    font-size: 25px;
+    padding: 20px;
+}
+
+.leftSection {
+    float: left;
+    width: 55%;
+    background-color: white;
+}
+
+.rightSection {
+    float: left;
+    width: 45%;
+    padding: 25px;
+    background-color:white;
+}
+
+.textInput {
+    width: 100%;
+    height: 200px;
+    display: block;
+    word-break: break-all;
+}
+
+.comentsDiv {
+    margin-top: 15px;
+    border-top: 3px solid red;
+    border-bottom: 3px solid red;
+    margin-bottom: 35px;
+}
+
+.commentInfo {
+    border-top: 2px solid;
+    border-color: rgb(230, 214, 214);
+    margin: 30px;
+    padding: 15px;
+}
+
+.commentInfoNameSpan {
+    float: left;
+}
+
+.commentInfoDateSpan {
+    float: right;
+}
+
+.commentValDiv {
+    border-top: 2px dashed;
+    border-color: rgb(230, 214, 214);
+    margin-left: 30px;
+    margin-right: 30px;
+    padding: 15px;
+}
+.mainBgDiv{
+       /*background: url('../img/breakfast.jpeg') no-repeat center center fixed;*/
+       background-repeat:no-repeat;
+       background-position-y:center;
+       background-position-x:center;
+       background-attachment:fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+#buyIngredients{
+    float:right;
+    margin-right:45px;
+    width:300px;
+
+
+}
+#submitCommnent{
+    width:100px;
+    margin-top:10px;
+}
+#messageSpan{
+    display:block;
+    font-weight:bold;
+}
+#adressMessageSpan{
+    color:red;
+    font-size:25px;
+    font-weight:bold;
+    display:block;
+}
+#adressSpan{
+        font-size:25px;
+    font-weight:bold;
+    display:block;
+}

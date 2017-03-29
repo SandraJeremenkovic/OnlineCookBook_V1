@@ -1,0 +1,101 @@
+﻿body {
+ background-color:antiquewhite;
+}
+
+.ImageDiv {
+    background-color: white;
+    width: 200px;
+    height: 200px;
+    float: left;
+}
+
+.leftImage {
+    float: left;
+    width: 100%;
+    height: 100%;
+}
+
+.itemDiv {
+    background-color: white;
+    display: table;
+    margin: 0 auto;
+    border-bottom: 3px solid red;
+    border-top: 3px solid red;
+
+}
+
+.mainDiv {
+
+    margin-top: 20px;
+    padding-bottom:20px;
+}
+
+.dcsDiv {
+    width: 550px;
+    float: left;
+    padding:5px;
+    font-size:25px;
+   
+}
+
+.descriptionDiv{
+     height:150px;
+}
+
+.recepieNameDiv {
+    text-align: center;
+    vertical-align: middle;
+    font-size: 40px;
+    font-weight: bold;
+    padding: 5px;
+    background-color: rgb(255, 179, 179);
+
+}
+
+.topImage{
+    background:url('../img/breakfast_img.jpg');
+          background-repeat:no-repeat;
+       background-position-y:center;
+       background-position-x:center;
+       background-attachment:fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    width:100%;
+    height:500px;
+    text-align:center;
+    vertical-align:middle;
+    font-size:45px;
+    color:white;
+    margin-top: 45px
+}
+.viewButton{
+    float:right;
+    width:150px;
+    font-size:15px !important;
+}
+.aboveMainDiv{
+    width:75% !important;
+    background-color:white;
+        border-top:35px solid red;
+    margin-top: -150px;
+    background-color: antiquewhite;
+}
+.textSpan{
+       text-align: center;
+    vertical-align: middle;
+    line-height: 294px;
+    font-weight: bold;
+    -webkit-text-stroke-color: black;
+    -webkit-text-stroke-width: 1px;
+}
+ 
+@media(max-width:1600px)
+{
+    .textSpan{
+        line-height:111px;
+    }
+}

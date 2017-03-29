@@ -1,0 +1,90 @@
+﻿@model List<OnlineCookBook.MongoDB_DataLayer.Entities.Recipe>
+@{
+    ViewBag.Title = "Recepies";
+}
+@{
+    if (ViewBag.User == null)
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_UserLayout.cshtml";
+    }
+
+
+}
+<link href="~/Content/ViewsCSS/RecepiesViewCSS.css" rel="stylesheet" />
+<input id="controlerUrl" type="hidden" value="@HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString()" />
+@if (Model.Count == 0)
+{
+    <div class="topImage" style="background-image:url('../img/breakfast_img.jpg');">
+
+
+        <span class="textSpan">There is no recipes available!</span>
+    </div>
+}
+else if (Model[0].Category == "breakfast")
+{
+    <div class="topImage" style="background-image:url(../../Content/img/breakfast.jpeg);">
+
+        
+        <span class="textSpan">Eat a good breakfast. There's no better meal to help fuel a great day.</span>
+    </div>
+}
+else if (Model[0].Category == "lunch")
+{
+    <div class="topImage" style="background-image:url('../Content/img/lunch.jpg');">
+
+
+        <span class="textSpan">Good food is for eating. Served as a good lunch is way to be enjoyed.</span>
+    </div>
+}
+else if (Model[0].Category == "dinner")
+{
+    <div class="topImage" style="background-image:url('../Content/img/dinner-big.jpg');">
+
+
+        <span class="textSpan">Food is not simply a fuel. It is a piece of art that must be combined into delicious dinner.</span>
+    </div>
+}
+
+
+
+<div class="container aboveMainDiv">
+    @foreach (var recipe in Model)
+    {
+
+        <div class="container mainDiv">
+            <div class="itemDiv">
+               
+                @Html.Hidden("RecepieId", @recipe.Id)
+                <div class="recepieNameDiv">@recipe.Name</div>
+                <div class="ImageDiv">
+                    <img class="leftImage" src='../Content/Images/@recipe.Image'  />
+
+                </div>
+                <div class="dcsDiv">
+                    <div class="descriptionDiv">
+                        @recipe.ShortDsc
+                    </div>
+                    <div class="TimeToPrepareDiv">
+                        @recipe.PrepareTime min <i class="glyphicon glyphicon-time"></i>
+                    <button id=@recipe.Id class="viewButton btn btn-danger">View Recipe</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+</div>
+
+<script>
+    $(".viewButton").on('click', function (e) {
+
+        window.location.href = "FullRecepieView?recepieId=" + e.currentTarget.id;
+       
+    });
+    $("#usernameLabel").text("@ViewBag.User");
+</script>
+
+

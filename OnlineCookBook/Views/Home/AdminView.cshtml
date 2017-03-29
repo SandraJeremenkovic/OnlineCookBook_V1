@@ -1,0 +1,292 @@
+﻿@model OnlineCookBook.Models.AdminViewModel
+@{
+    ViewBag.Title = "Admin";
+}
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+}
+<link href="~/Content/ViewsCSS/navbar_styleCSS.css" rel="stylesheet" />
+<link href="~/Content/ViewsCSS/RecepiesViewCSS.css" rel="stylesheet" />
+<link href="~/Content/ViewsCSS/FullRecepiesVIewCSS.css" rel="stylesheet" />
+
+
+<nav class="verticalNav">
+    <img id="adminImg" src="~/Content/img/AdminImgLogo.png" />
+    <div id="menuDiv">Menu:</div>
+    <ul>
+
+        <li id="viewRecipesDiv">
+            <div class="barra"></div>
+            <p class="menu">View Recipes</p>
+        </li>
+      
+
+
+        <li id="viewOrdersDiv">
+            <div class="barra"></div>
+            <p class="menu">View Pending Orders</p>
+        </li>
+        <li id="viewDeliveredOrdersDiv">
+            <div class="barra"></div>
+            <p class="menu">View Delivered Orders</p>
+        </li>
+
+    </ul>
+</nav>
+
+<div id="recipesDiv" class="margins">
+    @foreach (var recipe in Model.Recipes)
+    {
+        if (recipe.Status == "Unapproved")
+        { 
+        <div class="container mainDiv" style="margin:initial !important">
+            <div class="itemDiv">
+
+                @Html.Hidden("RecepieId", @recipe.Id)
+                <div class="recepieNameDiv" style="background-color:#ffa03a !important">@recipe.Name</div>
+                
+             
+                <div class="ImageDiv">
+                    <img class="leftImage" src='../Content/Images/@recipe.Image' />
+
+                </div>
+                <div class="dcsDiv">
+                    <div class="descriptionDiv">
+                        @recipe.ShortDsc
+                    </div>
+                    <div class="TimeToPrepareDiv">
+                        @recipe.PrepareTime min <i class="glyphicon glyphicon-time"></i>
+                        <button id=@recipe.Id class="viewButton btn btn-danger">View Recipe</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+    }
+    @foreach (var recipe in Model.Recipes)
+    {
+        if (recipe.Status == "Approved")
+        {
+            <div class="container mainDiv" style="margin:initial !important">
+                <div class="itemDiv">
+
+                    @Html.Hidden("RecepieId", @recipe.Id)
+                    <div class="recepieNameDiv" style="background-color:#37ef43 !important">@recipe.Name</div>
+                    
+                    <div class="ImageDiv">
+                        <img class="leftImage" src='../Content/Images/@recipe.Image' />
+
+                    </div>
+                    <div class="dcsDiv">
+                        <div class="descriptionDiv">
+                            @recipe.ShortDsc
+                        </div>
+                        <div class="TimeToPrepareDiv">
+                            @recipe.PrepareTime min <i class="glyphicon glyphicon-time"></i>
+                            <button id=@recipe.Id class="viewButton btn btn-danger">View Recipe</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    
+</div>
+<div id="fullRecipeDiv"></div>
+<div id="ordersDiv" style="margin-top: 100px;">
+    @foreach (var order in Model.Orders)
+    {
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                 
+                    <h2 style="text-align:center;font-weight:bold; color:black !important;" class="modal-title">#@order.Id</h2>
+                </div>
+                <div class="modal-body" style="margin-left: 35px;">
+                    <div style="height:420px">
+                        @foreach (var i in order.Ingredients)
+                        {
+                            var price = i.Price * i.Quantity;
+                            <ul id="ingredientsUl" style="display:block;">
+                                <li class="liElement" style="float:left; width:300px" id="@price">@i.Quantity @i.Name</li>
+
+
+                            </ul>
+                            <span style="float:right; font-size:25px" class="priceSpan">@price $</span>
+                        }
+                    </div>
+
+
+
+                    <div style="font-size:55px;  border-top:1px solid black; font-weight:bold;">Total:  @order.Fprice $</div>
+
+
+
+                    <div>
+                        <h2 style="text-align:center; display:block; margin-top:5px; margin-bottom:35px; padding-top:15px; color:red !important;  border-top:1px solid black;" class="modal-title">Adress To Deliver:</h2>
+                    </div>
+
+                    <span id="adressSpan">@order.UserInfo</span>
+
+
+                </div>
+                <div class="modal-footer">
+                    <span id="modalMessageSpan"></span>
+                    <button style="width:170px;" id=@order.Id type="button" class="btn btn-success confirmOrderBtn">Confirm Order</button>
+                    <button style="width:170px;" id=@order.Id type="button" class="btn btn-warning declineOrderBtn">Decline Order</button>
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+<div id="deliveredOrdersDiv" style="margin-top: 100px;">
+    @foreach (var order in Model.DeliveredOrders)
+    {
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+               
+                    <h2 style="text-align:center;font-weight:bold; color:black !important;" class="modal-title">#@order.Id</h2>
+                </div>
+                <div class="modal-body" style="margin-left: 35px;">
+                    <div style="height:420px">
+                        @foreach (var i in order.Ingredients)
+                        {
+                            var price = i.Price * i.Quantity;
+                            <ul id="ingredientsUl" style="display:block;">
+                                <li class="liElement" style="float:left; width:300px" id="@price">@i.Quantity @i.Name</li>
+
+
+                            </ul>
+                            <span style="float:right; font-size:25px" class="priceSpan">@price $</span>
+                        }
+                    </div>
+
+
+
+                    <div style="font-size:55px;  border-top:1px solid black; font-weight:bold;">Total:  @order.Fprice $</div>
+
+
+
+                    <div>
+                        <h2 style="text-align:center; display:block; margin-top:5px; margin-bottom:35px; padding-top:15px; color:red !important;  border-top:1px solid black;" class="modal-title">Adress To Deliver:</h2>
+                    </div>
+
+                    <span id="adressSpan">@order.UserInfo</span>
+
+
+                </div>
+                <div class="modal-footer">
+                    <span id="modalMessageSpan"></span>
+                    <button style="width:170px;" id=@order.Id type="button" class="btn btn-danger deleteOrderBtn">Delete Order</button>
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+<script>
+    $(document).ready(function () {
+        $("#ordersDiv").hide();
+        $("#deliveredOrdersDiv").hide();
+        
+    });
+    $(".viewButton").on('click', function (e) {
+
+        $("#recipesDiv").hide();
+        $("#ordersDiv").hide();
+        $("#deliveredOrdersDiv").hide();
+        var id = e.currentTarget.id;
+        var url = '@Url.Action("AdminFullRecipePartialView", "Home", new { recepieId = "ReplaceId" })';
+        url = url.replace("ReplaceId", id);
+        $("#fullRecipeDiv").load(url);
+
+    });
+    $("#viewRecipesDiv").on('click', function () {
+
+        location.href = "/Home/AdminView";
+
+
+    });
+    $("#viewOrdersDiv").on('click', function () {
+
+        $("#recipesDiv").hide();
+        $("#fullRecipeDiv").hide();
+        $("#deliveredOrdersDiv").hide();
+        $("#ordersDiv").show();
+
+
+    });
+    $("#viewDeliveredOrdersDiv").on('click', function () {
+
+        $("#recipesDiv").hide();
+        $("#fullRecipeDiv").hide();
+        
+        $("#ordersDiv").hide();
+        $("#deliveredOrdersDiv").show();
+
+
+    });
+    
+    $(".confirmOrderBtn").on('click', function (e) {
+        var id = e.currentTarget.id;
+        $.ajax(
+          {
+              type: 'POST',
+              url: '/Home/ConfirmOrder',
+              data: JSON.stringify({ orderId: id }),
+              contentType: 'application/json'
+          }).success(function (result, status, error) {
+              var message = $.parseJSON(result).message;
+              $("#modalMessageSpan").text(message);
+              $("#modalMessageSpan").css("color", "green");
+              setTimeout(function () { location.href = "/Home/AdminView"; }, 1000);
+              
+          });
+
+
+    });
+    $(".declineOrderBtn").on('click', function (e) {
+        var id = e.currentTarget.id;
+        $.ajax(
+         {
+             type: 'POST',
+             url: '/Home/DeclineOrder',
+             data: JSON.stringify({ orderId: id }),
+             contentType: 'application/json'
+         }).success(function (result, status, error) {
+             var message = $.parseJSON(result).message;
+             $("#modalMessageSpan").text(message);
+             $("#modalMessageSpan").css("color", "red");
+             setTimeout(function () { location.href = "/Home/AdminView"; }, 1000);
+
+         });
+
+
+    });
+    $(".deleteOrderBtn").on('click', function (e) {
+        var id = e.currentTarget.id;
+        $.ajax(
+         {
+             type: 'POST',
+             url: '/Home/DeclineOrder',
+             data: JSON.stringify({ orderId: id }),
+             contentType: 'application/json'
+         }).success(function (result, status, error) {
+             var message = $.parseJSON(result).message;
+             $("#modalMessageSpan").text(message);
+             $("#modalMessageSpan").css("color", "red");
+             setTimeout(function () { location.href = "/Home/AdminView"; }, 1000);
+
+
+         });
+
+
+    });
+</script>

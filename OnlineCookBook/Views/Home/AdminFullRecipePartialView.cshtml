@@ -1,0 +1,101 @@
+﻿@model OnlineCookBook.MongoDB_DataLayer.Entities.Recipe
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+}
+<link href="~/Content/ViewsCSS/FullRecepiesVIewCSS.css" rel="stylesheet" />
+<style>
+    #backBtn{
+        float:left;
+        margin-top:12px;
+    }
+    .buttonsDiv{
+        border-bottom:3px solid red;
+        border-top:3px solid red;
+        padding:20px;
+        margin-top:10px;
+        margin-bottom:35px;
+        background-color:white;
+    }
+</style>
+
+@Html.Hidden("RecipeId", @Model.Id)
+<div class="container">
+    <input id="controlerUrl" type="hidden" value="@HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString()" />
+    <div class="RecepieNameDiv">
+        <button class="btn btn-warning" id="backBtn"><i class="glyphicon glyphicon-menu-left"></i>Back</button>
+        @Model.Name
+    </div>
+    <img class="imageImg" src='../Content/Images/@Model.Image'>
+    <div class="ingredinesDiv">
+        <div class="titleDiv">Ingredients:</div>
+        @foreach (var i in Model.Ingredients)
+        {
+            <div style="margin-left:55px">
+                <i class="glyphicon glyphicon-arrow-right"></i>
+                <span class="quatntitySpan">@i.Quantity</span>
+                <span class="quatntitySpan">@i.Name</span>
+            </div>
+        }
+       
+    </div>
+    <div class="fullDescriptionDiv">
+        <div class="titleDiv">How to prepare:</div>
+        <div class="descDiv">@Model.LongDsc</div>
+    </div>
+    <div class="buttonsDiv">
+        @if (Model.Status == "Unapproved")
+        {
+            <button id="approveBtn" class="btn btn-success" style="width:350px; margin-right:20px">Approve Recipe</button>
+        }
+       
+        <button id="deleteBtn" class="btn btn-danger" style="width:350px; margin-right:20px">Delete Recipe</button>
+        <span id="returnMessage"></span>
+        
+    </div>
+ 
+</div>
+<script>
+    $("#backBtn").on('click', function (e) {
+
+        location.href = "/Home/AdminView";
+      
+
+    });
+    $("#approveBtn").on('click', function (e) {
+
+        $.ajax(
+          {
+              type: 'POST',
+              url: '/Home/ApproveRecipe',
+              data: JSON.stringify({ recipeId: $("#RecipeId").val() }),
+              contentType: 'application/json'
+          }).success(function (result, status, error) {
+              var message = $.parseJSON(result).message;
+              $("#returnMessage").text(message);
+              $("#returnMessage").css("color", "green");
+              setTimeout(function () { location.href = "/Home/AdminView"; }, 1000);
+          });
+
+
+    });
+    $("#deleteBtn").on('click', function (e) {
+
+        $.ajax(
+         {
+             type: 'POST',
+             url: '/Home/DeleteRecipe',
+             data: JSON.stringify({ recipeId: $("#RecipeId").val() }),
+             contentType: 'application/json'
+         }).success(function (result, status, error) {
+             var message = $.parseJSON(result).message;
+             $("#returnMessage").text(message);
+             $("#returnMessage").css("color", "red");
+             setTimeout(function () { location.href = "/Home/AdminView"; }, 1000);
+
+         });
+
+
+    });
+</script>
+

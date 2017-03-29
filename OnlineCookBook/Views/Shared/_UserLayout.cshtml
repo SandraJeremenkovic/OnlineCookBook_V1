@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Online CookBook</title>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/ViewScripts/LayoutJS.js"></script>
+    <script src="~/Scripts/chosen.jquery.min.js"></script>
+    <script src="~/Scripts/chosen.proto.min.js"></script>
+    <link href="~/Content/chosen.css" rel="stylesheet" />
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <style>
+        .loginInput{
+            float:right;
+            margin:15px;
+        }
+        #usernameLabel {
+            margin-top: 5px;
+            color: red;
+            margin-right: 25px;
+        }
+         #logoutAnchor:hover{
+             cursor:pointer;
+         }
+         
+        .loginInput{
+            float:right;
+            margin:15px;
+        }
+        #loginDiv{
+            height:60px;
+            background-color:red;
+        }
+        .navbarStyle2{
+            border-bottom:3px solid red; 
+            border-top:3px solid red; 
+            background-color:white;
+
+        }
+          a{
+            color:black !important;
+        }
+        a:hover{
+            color:red !important;
+            
+        }
+        li{
+            font-size:30px;
+        }
+        .logoDiv:hover{
+            cursor:pointer;
+        }
+    </style>
+  
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top navbarStyle2">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                    
+                </ul>
+                <div class="logoDiv" style="width: 180px; height: 90px; float: left; margin-left: 237px;" onclick="@("window.location.href='" + @Url.Action("Index", "Home") + "'");"><img src="~/Content/img/CookBook Logo V2 PNG.png" /></div>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>@Html.ActionLink("Add Recipe", "AddRecepie", "Home")</li>
+                    
+                    <li><a id="logoutAnchor">Log out</a></li>
+                    <li><label id="usernameLabel"></label></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+        @RenderBody()
+
+
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script>
+       
+        $("#logoutAnchor").on('click', function () {
+
+            window.location.href = '@Url.Action("Logout", "Home")';
+
+        });
+
+    </script>
+</body>
+
+</html>

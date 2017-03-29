@@ -1,0 +1,28 @@
+﻿body {
+}
+
+.mainDiv {
+    margin: 0 auto;
+    width: 40%;
+    background-color: white;
+    border-bottom: 3px solid red;
+    border-top: 3px solid red;
+    margin-top: 50px;
+}
+
+.logoDiv {
+    margin: 0 auto;
+
+    width: 350px;
+    height: 180px;
+
+    margin-top: 25px;
+}
+
+.textDiv {
+    padding: 15px;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+}
+

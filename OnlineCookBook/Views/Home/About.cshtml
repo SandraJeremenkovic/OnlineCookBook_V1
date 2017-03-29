@@ -1,0 +1,45 @@
+﻿@{
+    ViewBag.Title = "About";
+}
+@{
+    if (ViewBag.User == null)
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_UserLayout.cshtml";
+    }
+
+
+}
+<style>
+    .maindiv{
+        margin-top:75px;
+        border-bottom:3px solid red;
+        border-top:3px solid red;
+        background-color:white;
+        text-align:center;
+        padding:15px;
+        margin-bottom:35px;
+    }
+</style>
+
+
+<div class="container maindiv">
+    <h1><b>Dobrodošli u OnlineCookBook!</b></h1>
+    <h2 style="margin-top:25px; text-align:justify;">Ovaj projekat je realizovan za potrebe predmeta Napredne baza podataka. Predstavlja online bazu recepata (online kuvar) i podrazumeva postojanje dva dela: Korisnički i Administratorski.</h2>
+    <h1 style="margin-top:25px;">Korisnički deo:</h1>
+    <h3 style ="margin-top:25px; text-align:justify;">Korisnički deo omogućava korisnicima da vrše pretraživanje recepata po tri kategorije: Breakfast, Lunch, Dinner ili po tagovima. U okviru svake kategorije za svaki od recepata su prikazane osnovne informacije sa slikom i opcija koja omogućava pregled celog recepta koji sadrži dodatno i listu sastojaka, način pripreme i komentare, kao i opciju za online kupovinu sastojaka. Odabirom opcije za kupovinu sastojaka se generiše kompletan račun sa ukupnom cenom i adresom za dostavu. Korisnici imaju i mogućnost kreiranja svog naloga, čime im se obezbeđuju opcije za dodavanje novog recepta ili postavljanja komentara za već postojeći. Dodavanje novog recepta podrazumeva dodavanje slike, naziva, liste sastojaka(cilj je da se koriste samo sastojci koji se trenutno nalaze u prodavnici kako bi za svaki recept bila obezbedjena dostava porudzbine), odabir kategorije i vremena pripreme, dodavanje kratkog opisa, načina pripreme i liste tagova po kojima će se vršiti pretraga. Svaki recept koji je dodat mora biti odobren od strane administratora kako bi bio postavljen na sajt, a takođe i svaka narudžbina mora biti odobrena kako bi se izvršila dostava.</h3>
+    <h1 style="margin-top:25px;">Administratorski deo: <b>Username: Admin Password: Admin</b></h1>
+    <h3 style="margin-top:25px; text-align:justify;">Administratorski deo omogućava pregled svih recepata, pri čemu administrator za sve nove recepte koji su u statusu čekanja (Pending) ima mogućnost odobravanja postavljanja na sajt ili brisanja, ali takođe može brisati i već postavljene recepte. Može vršiti i pregled narudžbina koje su u statusu čekanja (Pending) i odobriti njihovo dostavljanje ili ih obrisati.</h3>
+    <h2 style="margin-top:55px">Projekat realizovali: <b>Nenad Stojanović 14930, Sandra Jeremenković 14678</b></h2>
+</div>
+
+
+
+
+
+<script>
+    $("#usernameLabel").text("@ViewBag.User");
+</script>

@@ -1,0 +1,180 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Online CookBook</title>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/ViewScripts/LayoutJS.js"></script>
+    <script src="~/Scripts/chosen.jquery.min.js"></script>
+    <script src="~/Scripts/chosen.proto.min.js"></script>
+    <script src="~/Scripts/ViewScripts/LayoutJS.js"></script>
+    <link href="~/Content/chosen.css" rel="stylesheet" />
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <style>
+        .loginInput{
+            float:right;
+            margin:15px;
+        }
+        #loginDiv{
+            height:60px;
+            background-color:red;
+        }
+        .navbarStyle2{
+            border-bottom:3px solid red; 
+            border-top:3px solid red; 
+            background-color:white;
+
+        }
+        a{
+            color:black !important;
+        }
+        a:hover{
+            color:red !important;
+            
+        }
+        li{
+            font-size:30px;
+        }
+         .logoDiv:hover{
+            cursor:pointer;
+        }
+         #loginAnchor:hover{
+             cursor:pointer;
+         }
+    </style>
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top navbarStyle2">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @*@Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav" >
+                    <li style="color:red;">@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li >@Html.ActionLink("About", "About", "Home")</li>
+
+                </ul>
+                <div class="logoDiv" style="width: 180px; height: 90px; float: left; margin-left: 245px;" onclick="@("window.location.href='" + @Url.Action("Index", "Home") + "'");"><img src="~/Content/img/CookBook Logo V2 PNG.png" /></div>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>@Html.ActionLink("Register", "RegisterView", "Home")</li>
+                    <li><a id="loginAnchor">Log in</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="loginDiv" hidden style="margin-top: 47px;">
+
+        <button id="hideButton" class="loginInput btn btn-danger"><i class="glyphicon glyphicon-chevron-up"></i></button>
+        <button id="loginButton" class="loginInput btn btn-danger">Login</button>
+        <input id="PasswordInput" type="password" class="form-control loginInput" placeholder="Password" onkeypress="return enterLogin(event)" style="float:right;" tabindex=2 />
+        <input id="usernameInput" type="text" class="form-control loginInput" placeholder="Username" style="float:right;" tabindex=1 />
+        
+        <label id="resultLabel" class="loginInput" style="margin-top:23px;"></label>
+
+
+    </div>
+        @RenderBody()
+
+
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script>
+        $("#loginDiv").hide();
+        $("#hideButton").on('click', function () {
+
+            $("#loginDiv").hide();
+
+        });
+
+        $("#loginAnchor").on('click', function () {
+
+            $("#loginDiv").show();
+
+        });
+        $("#loginButton").on('click', function () {
+
+
+        
+            if ($("#usernameInput").val() == "" || $("#PasswordInput").val() == "") {
+                $("#resultLabel").text("All fields are required!");
+                $("#resultLabel").css("color", "red");
+                return;
+            }
+
+
+            if ($("#usernameInput").val() == "Admin" && $("#PasswordInput").val() == "Admin") {
+                location.href = "/Home/AdminView";
+            }
+
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/Home/Login',
+                    data: JSON.stringify({ username: $("#usernameInput").val(), password: $("#PasswordInput").val() }),
+                    contentType: 'application/json'
+                }).success(function (result, status, error) {
+                    var message = $.parseJSON(result).message;
+                    if (message == "Success!")
+                    {
+                        location.href = "/Home/Index";
+                    }
+                    else {
+                        $("#resultLabel").text(message);
+                        $("#resultLabel").css("color", "black");
+                    }
+                    
+            
+                });
+
+        });
+        function enterLogin(e) {
+            if (e.keyCode == 13) {
+                if ($("#usernameInput").val() == "" || $("#PasswordInput").val() == "") {
+                    $("#resultLabel").text("All fields are required!");
+                    $("#resultLabel").css("color", "red");
+                    return;
+                }
+
+
+                if ($("#usernameInput").val() == "Admin" && $("#PasswordInput").val() == "Admin") {
+                    location.href = "/Home/AdminView";
+                }
+
+                $.ajax(
+                    {
+                        type: 'POST',
+                        url: '/Home/Login',
+                        data: JSON.stringify({ username: $("#usernameInput").val(), password: $("#PasswordInput").val() }),
+                        contentType: 'application/json'
+                    }).success(function (result, status, error) {
+                        var message = $.parseJSON(result).message;
+                        if (message == "Success!") {
+                            location.href = "/Home/Index";
+                        }
+                        else {
+                            $("#resultLabel").text(message);
+                            $("#resultLabel").css("color", "black");
+                        }
+
+
+                    });
+
+
+            }
+        }
+        
+    </script>
+</body>
+
+</html>
